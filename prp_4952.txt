@@ -1,0 +1,557 @@
+GARIMA TULI cs610 4952 prp
+
+Bug Report
+HANDOUT 2 ADHERED; NO BUGS TO REPORT
+
+*****************************************
+
+Following command was used to check the Java Version while testing in the AFS machine afsconnect1.njit.edu
+java -version
+
+Output of the above command is as mentioned below
+java version "10.0.2" 2018-07-17
+Java(TM) SE Runtime Environment 18.3 (build 10.0.2+13)
+Java HotSpot(TM) 64-Bit Server VM 18.3 (build 10.0.2+13, mixed mode)
+
+*****************************************
+
+Dearchiving Instructions on afs machine
+1) To unzip the project folder, please use below command
+ unzip prp_4952.zip
+
+2) (An Optional but HIGHLY RECOMMENED Step - The program runs fine without doing this step too 
+but to increase the readability of program and to remove any problems occuring due to newline,linefeed etc this step is highly recommended.)
+When the project zip file named "prp_4952.zip" is unzipped, certain characters called Ctrl M characters are generated at end of every line in each file.
+To remove these Ctrl M characters obtained due to transfer of the zip folder from windows to AFS Machine please use below commands
+dos2unix hits_4952.java
+dos2unix pgrk_4952.java
+dos2unix prp_4952.txt
+dos2unix samplegraph.txt
+
+Compilation Instructions 
+1) To compile java file for HITS algorithm, please run below command
+javac hits_4952.java
+
+2) To compile java file for Google's Page Rank algorithm, please run below command 
+javac pgrk_4952.java
+
+javac command will compile the java program and generate the class file.
+
+NOTE: When you complie the java files, you will observe that a directory called ".oracle_jre_usage/" is created.
+But this does not harm the execution of our program, its just the Java Usage Tracker which though you can get rid of 
+but it will be recreated any time a Java program is compiled.
+
+
+Execution Instructions
+1) To execute java file for HITS algorithm, please run below command
+java hits_4952 iterations initialvalue filename  (For example, java hits_4952 7 1 samplegraph.txt)
+
+2) To execute java file for Google's Page Rank algorithm, please run below command 
+java pgrk_4952 iterations initialvalue filename (For example, java pgrk_4952 15 -1 samplegraph.txt)
+
+Pass in different values to test the test cases:
+iterations = >0 , <0 or =0
+initial Value = -2, -1, 0 or 1
+filename - samplegraph.txt
+
+*****************************************
+
+Implementation guidelines
+1) All the requirements given in Programming Project Handout has been included while implementing HITS and Page Rank Implementation.
+2) Clear and Extensive comments has been included during the implementation
+3) Implementation has been done in Java
+4) First line of each file has been mentioned as - GARIMA TULI cs610 4952 prp
+5) Each File is named according to the convention instructed, namely hits_4952.java , pgrk_4952.java and prp_4952.txt
+6) This implementation can be compiled and executed using command line processing and is capable of reading a file based I/O
+7) As instructed in Programming guidelines, the submission is made in a zip format and will not generate any hidden or class files.
+8) This implementation is comprehensible to run for various user input for eg: for smaller graphs where n <=10 or for larger graphs where n>10 and less than 1,000,000
+   It accepts positive, zero or negative iterations, initialvalue as 0, 1, -1 or -2 and filename samplegraph.txt
+9) This file consist of some use cases and output using the samplegraph mentioned in prp handout
+4 4
+0 2
+0 3
+1 0
+2 1
+
+
+************************************************************************************************************************************************************************************************************************************
+
+HITS Implementation
+
+Snapshot of Hits Implementation
+
+Graph mentioned as per prp handout is saved in samplegraph.txt file.
+
+Global Variables
+iterations - To store number of iterations
+initialvalue - To store initialvalue
+filename - to store filename
+n,m - for number of vertics and number of edges
+adjMatrix - Adjacency Vector
+h0 and a0 array - intial hub and authority vector
+errorrate = 0.0 (initialization)
+
+This implementation accepts three arguments from user.
+1) Number of Iterations
+2) Initial value which can only be -2,-1, 0 or 1
+3) Filename
+
+Following validations have been performed.
+This is performed in main method of Java
+1) If initial value is other than -2, -1, 0 or 1, user will get message to give correct inputs.
+2) If arguments are less than 3, user will get message to give correct inputs.
+3) Exception handling is done in order to handle if the file is not found.
+
+Parameterized constructor in Java, forms the initial hub h0 and authority vector a0 based on initial value
+1) If initial value is 0 , it is assigned with 0
+2) If initial value is 1, it is assigned with 1
+3) If initial value is -1, it is assigned with 1.0/n;
+4) If initial value is -2, it is assigned with 1.0/sqrt(n)
+
+Main Logic of the Implementation
+In Function calculateHubAuthorityScore(), following logic has been performed.
+Case 1: If number of vertices n <= 10
+Base is calculated and printed (Upto 7 decimal digits)
+
+a) If number of Iterations is greater than zero
+Hub and authority vector are calculated and printed as per programming project handout example conventions for the number of iterations (Upto 7 decimal digits)
+
+b) If number of Iterations is less than or equal to zero
+Hub and authority vectors are calculated and printed by calling a hasConverged function, which returns true if (currentValue-previousValue) is greater than errorrate or it returns false
+While hasConverged function returns true, hub and authority vector is calculated and printed to the user (Upto 7 decimal digits)
+
+A separate errorrate function calculates the errorrate based on following logic
+a) If iterations == 0, errorrate is (10 power -5)
+b) If iterations < 0, errorate is (10 power iterations)
+
+Case 2: If number of vertices is  ( n > 10 and n < 1,000,000)
+As per requirements, iterations are set to 0 and initial hub and authority vector is set to 1.0/n
+Base is calculated and printed (Upto 7 decimal digits)
+
+Hub and authority vector are calculated and printed by calling a hasConverged function, which returns true if (currentValue-previousValue) is greater than errorrate or it returns false
+While hasConverged function returns true, hub and authority matrix are calculated and printed to the user (Upto 7 decimal digits)
+
+A separate errorrate function calculates the errorrate based on following logic
+a) If iterations == 0, errorrate is (10 power -5)
+b) If iterations < 0, errorate is (10 power iterations)
+
+
+Sample Use case and output
+
+1) java hits_4952 7 1 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 1.0000000/1.0000000 A/H[ 1]= 1.0000000/1.0000000 A/H[ 2]= 1.0000000/1.0000000 A/H[ 3]= 1.0000000/1.0000000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+Iter : 5 :A/H[ 0]= 0.0441081/0.9990249 A/H[ 1]= 0.0441081/0.0312195 A/H[ 2]= 0.7057297/0.0312195 A/H[ 3]= 0.7057297/0.0000000
+Iter : 6 :A/H[ 0]= 0.0220863/0.9997559 A/H[ 1]= 0.0220863/0.0156212 A/H[ 2]= 0.7067618/0.0156212 A/H[ 3]= 0.7067618/0.0000000
+Iter : 7 :A/H[ 0]= 0.0110472/0.9999390 A/H[ 1]= 0.0110472/0.0078120 A/H[ 2]= 0.7070205/0.0078120 A/H[ 3]= 0.7070205/0.0000000
+
+2) java hits_4952 7 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 0.2500000/0.2500000 A/H[ 1]= 0.2500000/0.2500000 A/H[ 2]= 0.2500000/0.2500000 A/H[ 3]= 0.2500000/0.2500000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+Iter : 5 :A/H[ 0]= 0.0441081/0.9990249 A/H[ 1]= 0.0441081/0.0312195 A/H[ 2]= 0.7057297/0.0312195 A/H[ 3]= 0.7057297/0.0000000
+Iter : 6 :A/H[ 0]= 0.0220863/0.9997559 A/H[ 1]= 0.0220863/0.0156212 A/H[ 2]= 0.7067618/0.0156212 A/H[ 3]= 0.7067618/0.0000000
+Iter : 7 :A/H[ 0]= 0.0110472/0.9999390 A/H[ 1]= 0.0110472/0.0078120 A/H[ 2]= 0.7070205/0.0078120 A/H[ 3]= 0.7070205/0.0000000
+
+3) java hits_4952 7 -2 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 0.5000000/0.5000000 A/H[ 1]= 0.5000000/0.5000000 A/H[ 2]= 0.5000000/0.5000000 A/H[ 3]= 0.5000000/0.5000000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+Iter : 5 :A/H[ 0]= 0.0441081/0.9990249 A/H[ 1]= 0.0441081/0.0312195 A/H[ 2]= 0.7057297/0.0312195 A/H[ 3]= 0.7057297/0.0000000
+Iter : 6 :A/H[ 0]= 0.0220863/0.9997559 A/H[ 1]= 0.0220863/0.0156212 A/H[ 2]= 0.7067618/0.0156212 A/H[ 3]= 0.7067618/0.0000000
+Iter : 7 :A/H[ 0]= 0.0110472/0.9999390 A/H[ 1]= 0.0110472/0.0078120 A/H[ 2]= 0.7070205/0.0078120 A/H[ 3]= 0.7070205/0.0000000
+
+4) java hits_4952 0 1 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 1.0000000/1.0000000 A/H[ 1]= 1.0000000/1.0000000 A/H[ 2]= 1.0000000/1.0000000 A/H[ 3]= 1.0000000/1.0000000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+Iter : 5 :A/H[ 0]= 0.0441081/0.9990249 A/H[ 1]= 0.0441081/0.0312195 A/H[ 2]= 0.7057297/0.0312195 A/H[ 3]= 0.7057297/0.0000000
+Iter : 6 :A/H[ 0]= 0.0220863/0.9997559 A/H[ 1]= 0.0220863/0.0156212 A/H[ 2]= 0.7067618/0.0156212 A/H[ 3]= 0.7067618/0.0000000
+Iter : 7 :A/H[ 0]= 0.0110472/0.9999390 A/H[ 1]= 0.0110472/0.0078120 A/H[ 2]= 0.7070205/0.0078120 A/H[ 3]= 0.7070205/0.0000000
+Iter : 8 :A/H[ 0]= 0.0055241/0.9999847 A/H[ 1]= 0.0055241/0.0039062 A/H[ 2]= 0.7070852/0.0039062 A/H[ 3]= 0.7070852/0.0000000
+Iter : 9 :A/H[ 0]= 0.0027621/0.9999962 A/H[ 1]= 0.0027621/0.0019531 A/H[ 2]= 0.7071014/0.0019531 A/H[ 3]= 0.7071014/0.0000000
+Iter : 10 :A/H[ 0]= 0.0013811/0.9999990 A/H[ 1]= 0.0013811/0.0009766 A/H[ 2]= 0.7071054/0.0009766 A/H[ 3]= 0.7071054/0.0000000
+Iter : 11 :A/H[ 0]= 0.0006905/0.9999998 A/H[ 1]= 0.0006905/0.0004883 A/H[ 2]= 0.7071064/0.0004883 A/H[ 3]= 0.7071064/0.0000000
+Iter : 12 :A/H[ 0]= 0.0003453/0.9999999 A/H[ 1]= 0.0003453/0.0002441 A/H[ 2]= 0.7071067/0.0002441 A/H[ 3]= 0.7071067/0.0000000
+Iter : 13 :A/H[ 0]= 0.0001726/1.0000000 A/H[ 1]= 0.0001726/0.0001221 A/H[ 2]= 0.7071068/0.0001221 A/H[ 3]= 0.7071068/0.0000000
+Iter : 14 :A/H[ 0]= 0.0000863/1.0000000 A/H[ 1]= 0.0000863/0.0000610 A/H[ 2]= 0.7071068/0.0000610 A/H[ 3]= 0.7071068/0.0000000
+Iter : 15 :A/H[ 0]= 0.0000432/1.0000000 A/H[ 1]= 0.0000432/0.0000305 A/H[ 2]= 0.7071068/0.0000305 A/H[ 3]= 0.7071068/0.0000000
+Iter : 16 :A/H[ 0]= 0.0000216/1.0000000 A/H[ 1]= 0.0000216/0.0000153 A/H[ 2]= 0.7071068/0.0000153 A/H[ 3]= 0.7071068/0.0000000
+Iter : 17 :A/H[ 0]= 0.0000108/1.0000000 A/H[ 1]= 0.0000108/0.0000076 A/H[ 2]= 0.7071068/0.0000076 A/H[ 3]= 0.7071068/0.0000000
+Iter : 18 :A/H[ 0]= 0.0000054/1.0000000 A/H[ 1]= 0.0000054/0.0000038 A/H[ 2]= 0.7071068/0.0000038 A/H[ 3]= 0.7071068/0.0000000
+
+5) java hits_4952 0 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 0.2500000/0.2500000 A/H[ 1]= 0.2500000/0.2500000 A/H[ 2]= 0.2500000/0.2500000 A/H[ 3]= 0.2500000/0.2500000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+Iter : 5 :A/H[ 0]= 0.0441081/0.9990249 A/H[ 1]= 0.0441081/0.0312195 A/H[ 2]= 0.7057297/0.0312195 A/H[ 3]= 0.7057297/0.0000000
+Iter : 6 :A/H[ 0]= 0.0220863/0.9997559 A/H[ 1]= 0.0220863/0.0156212 A/H[ 2]= 0.7067618/0.0156212 A/H[ 3]= 0.7067618/0.0000000
+Iter : 7 :A/H[ 0]= 0.0110472/0.9999390 A/H[ 1]= 0.0110472/0.0078120 A/H[ 2]= 0.7070205/0.0078120 A/H[ 3]= 0.7070205/0.0000000
+Iter : 8 :A/H[ 0]= 0.0055241/0.9999847 A/H[ 1]= 0.0055241/0.0039062 A/H[ 2]= 0.7070852/0.0039062 A/H[ 3]= 0.7070852/0.0000000
+Iter : 9 :A/H[ 0]= 0.0027621/0.9999962 A/H[ 1]= 0.0027621/0.0019531 A/H[ 2]= 0.7071014/0.0019531 A/H[ 3]= 0.7071014/0.0000000
+Iter : 10 :A/H[ 0]= 0.0013811/0.9999990 A/H[ 1]= 0.0013811/0.0009766 A/H[ 2]= 0.7071054/0.0009766 A/H[ 3]= 0.7071054/0.0000000
+Iter : 11 :A/H[ 0]= 0.0006905/0.9999998 A/H[ 1]= 0.0006905/0.0004883 A/H[ 2]= 0.7071064/0.0004883 A/H[ 3]= 0.7071064/0.0000000
+Iter : 12 :A/H[ 0]= 0.0003453/0.9999999 A/H[ 1]= 0.0003453/0.0002441 A/H[ 2]= 0.7071067/0.0002441 A/H[ 3]= 0.7071067/0.0000000
+Iter : 13 :A/H[ 0]= 0.0001726/1.0000000 A/H[ 1]= 0.0001726/0.0001221 A/H[ 2]= 0.7071068/0.0001221 A/H[ 3]= 0.7071068/0.0000000
+Iter : 14 :A/H[ 0]= 0.0000863/1.0000000 A/H[ 1]= 0.0000863/0.0000610 A/H[ 2]= 0.7071068/0.0000610 A/H[ 3]= 0.7071068/0.0000000
+Iter : 15 :A/H[ 0]= 0.0000432/1.0000000 A/H[ 1]= 0.0000432/0.0000305 A/H[ 2]= 0.7071068/0.0000305 A/H[ 3]= 0.7071068/0.0000000
+Iter : 16 :A/H[ 0]= 0.0000216/1.0000000 A/H[ 1]= 0.0000216/0.0000153 A/H[ 2]= 0.7071068/0.0000153 A/H[ 3]= 0.7071068/0.0000000
+Iter : 17 :A/H[ 0]= 0.0000108/1.0000000 A/H[ 1]= 0.0000108/0.0000076 A/H[ 2]= 0.7071068/0.0000076 A/H[ 3]= 0.7071068/0.0000000
+Iter : 18 :A/H[ 0]= 0.0000054/1.0000000 A/H[ 1]= 0.0000054/0.0000038 A/H[ 2]= 0.7071068/0.0000038 A/H[ 3]= 0.7071068/0.0000000
+
+6) java hits_4952 0 -2 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 0.5000000/0.5000000 A/H[ 1]= 0.5000000/0.5000000 A/H[ 2]= 0.5000000/0.5000000 A/H[ 3]= 0.5000000/0.5000000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+Iter : 5 :A/H[ 0]= 0.0441081/0.9990249 A/H[ 1]= 0.0441081/0.0312195 A/H[ 2]= 0.7057297/0.0312195 A/H[ 3]= 0.7057297/0.0000000
+Iter : 6 :A/H[ 0]= 0.0220863/0.9997559 A/H[ 1]= 0.0220863/0.0156212 A/H[ 2]= 0.7067618/0.0156212 A/H[ 3]= 0.7067618/0.0000000
+Iter : 7 :A/H[ 0]= 0.0110472/0.9999390 A/H[ 1]= 0.0110472/0.0078120 A/H[ 2]= 0.7070205/0.0078120 A/H[ 3]= 0.7070205/0.0000000
+Iter : 8 :A/H[ 0]= 0.0055241/0.9999847 A/H[ 1]= 0.0055241/0.0039062 A/H[ 2]= 0.7070852/0.0039062 A/H[ 3]= 0.7070852/0.0000000
+Iter : 9 :A/H[ 0]= 0.0027621/0.9999962 A/H[ 1]= 0.0027621/0.0019531 A/H[ 2]= 0.7071014/0.0019531 A/H[ 3]= 0.7071014/0.0000000
+Iter : 10 :A/H[ 0]= 0.0013811/0.9999990 A/H[ 1]= 0.0013811/0.0009766 A/H[ 2]= 0.7071054/0.0009766 A/H[ 3]= 0.7071054/0.0000000
+Iter : 11 :A/H[ 0]= 0.0006905/0.9999998 A/H[ 1]= 0.0006905/0.0004883 A/H[ 2]= 0.7071064/0.0004883 A/H[ 3]= 0.7071064/0.0000000
+Iter : 12 :A/H[ 0]= 0.0003453/0.9999999 A/H[ 1]= 0.0003453/0.0002441 A/H[ 2]= 0.7071067/0.0002441 A/H[ 3]= 0.7071067/0.0000000
+Iter : 13 :A/H[ 0]= 0.0001726/1.0000000 A/H[ 1]= 0.0001726/0.0001221 A/H[ 2]= 0.7071068/0.0001221 A/H[ 3]= 0.7071068/0.0000000
+Iter : 14 :A/H[ 0]= 0.0000863/1.0000000 A/H[ 1]= 0.0000863/0.0000610 A/H[ 2]= 0.7071068/0.0000610 A/H[ 3]= 0.7071068/0.0000000
+Iter : 15 :A/H[ 0]= 0.0000432/1.0000000 A/H[ 1]= 0.0000432/0.0000305 A/H[ 2]= 0.7071068/0.0000305 A/H[ 3]= 0.7071068/0.0000000
+Iter : 16 :A/H[ 0]= 0.0000216/1.0000000 A/H[ 1]= 0.0000216/0.0000153 A/H[ 2]= 0.7071068/0.0000153 A/H[ 3]= 0.7071068/0.0000000
+Iter : 17 :A/H[ 0]= 0.0000108/1.0000000 A/H[ 1]= 0.0000108/0.0000076 A/H[ 2]= 0.7071068/0.0000076 A/H[ 3]= 0.7071068/0.0000000
+Iter : 18 :A/H[ 0]= 0.0000054/1.0000000 A/H[ 1]= 0.0000054/0.0000038 A/H[ 2]= 0.7071068/0.0000038 A/H[ 3]= 0.7071068/0.0000000
+
+7) java hits_4952 -1 1 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 1.0000000/1.0000000 A/H[ 1]= 1.0000000/1.0000000 A/H[ 2]= 1.0000000/1.0000000 A/H[ 3]= 1.0000000/1.0000000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+
+8) java hits_4952 -1 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 0.2500000/0.2500000 A/H[ 1]= 0.2500000/0.2500000 A/H[ 2]= 0.2500000/0.2500000 A/H[ 3]= 0.2500000/0.2500000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+
+9) java hits_4952 -1 -2 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 0.5000000/0.5000000 A/H[ 1]= 0.5000000/0.5000000 A/H[ 2]= 0.5000000/0.5000000 A/H[ 3]= 0.5000000/0.5000000
+Iter : 1 :A/H[ 0]= 0.5000000/0.8164966 A/H[ 1]= 0.5000000/0.4082483 A/H[ 2]= 0.5000000/0.4082483 A/H[ 3]= 0.5000000/0.0000000
+Iter : 2 :A/H[ 0]= 0.3162278/0.9428090 A/H[ 1]= 0.3162278/0.2357023 A/H[ 2]= 0.6324555/0.2357023 A/H[ 3]= 0.6324555/0.0000000
+Iter : 3 :A/H[ 0]= 0.1714986/0.9847319 A/H[ 1]= 0.1714986/0.1230915 A/H[ 2]= 0.6859943/0.1230915 A/H[ 3]= 0.6859943/0.0000000
+Iter : 4 :A/H[ 0]= 0.0877058/0.9961165 A/H[ 1]= 0.0877058/0.0622573 A/H[ 2]= 0.7016464/0.0622573 A/H[ 3]= 0.7016464/0.0000000
+
+10) java hits_4952 0 0 samplegraph.txt
+*** Program Output ***
+Base : 0 :A/H[ 0]= 0.0000000/0.0000000 A/H[ 1]= 0.0000000/0.0000000 A/H[ 2]= 0.0000000/0.0000000 A/H[ 3]= 0.0000000/0.0000000
+Iter : 1 :A/H[ 0]= 0.0000000/0.0000000 A/H[ 1]= 0.0000000/0.0000000 A/H[ 2]= 0.0000000/0.0000000 A/H[ 3]= 0.0000000/0.0000000
+
+
+************************************************************************************************************************************************************************************************************************************
+************************************************************************************************************************************************************************************************************************************
+
+
+Page Rank Implementation
+
+
+Snapshot of Page Rank Implementation
+
+Graph mentioned as per prp handout is saved in samplegraph.txt file.
+
+Global Variables
+iterations - To store number of iterations
+initialvalue - To store initialvalue
+filename - to store filename
+n,m - for number of vertics and number of edges
+adjMatrix - Adjacency Vector
+d - 0.85 as parameter d
+errorrate - 0.0 (initialization)
+C - Array to store outgoing link of Ti
+src - Initial Page rank vector
+D - Page rank vector for the ith iteration
+
+This implementation accepts three arguments from user.
+1) Number of Iterations
+2) Initial value which can only be -2,-1, 0 or 1
+3) Filename
+
+Following validations have been performed.
+This is performed in main method of Java
+1) If initial value is other than -2, -1, 0 or 1, user will get message to give correct inputs.
+2) If arguments are less than 3, user will get message to give correct inputs.
+3) Exception handling is done, in order to handle if the file is not found.
+
+Parameterized constructor in Java, forms the initial page rank vector src based on initial value
+1) If initial value is 0 , it is assigned with 0
+2) If initial value is 1, it is assigned with 1
+3) If initial value is -1, it is assigned with 1.0/n
+4) If initial value is -2, it is assigned with 1.0/sqrt(n)
+
+Main Logic of the Implementation
+In Function calculatePageRank(), following logic has been performed.
+
+Case 1: If number of vertices n <= 10
+Base is calculated and printed (Upto 7 decimal digits)
+
+a) If number of Iterations is greater than zero
+Page rank is calculated and printed as per programming project handout example conventions for the number of iterations (Upto 7 decimal digits)
+
+b) If number of Iterations is less than or equal to zero
+
+Page rank is calculated and printed by calling a hasConverged function, which returns true if (initial page rank vector - current page rank vector) value is greater than errorrate or it returns false
+While hasConverged function returns true, page rank vector is calculated and printed to the user (Upto 7 decimal digits)
+
+A separate errorrate function calculates the errorrate based on following logic
+a) If iterations == 0, errorrate is (10 power -5)
+b) If iterations < 0, errorate is (10 power iterations)
+
+Case 2: If number of vertices is  ( n > 10 and n < 1,000,000)
+As per requirements, iterations are set to 0 and initial page rank vector is set to 1.0/n
+Base is calculated and printed (Upto 7 decimal digits)
+
+Page rank vector is calculated and printed by calling a hasConverged function, which returns true if (initial page rank vector - current page rank vector) value is greater than errorrate or it returns false
+While hasConverged function returns true, page rank vector is calculated and printed to the user (Upto 7 decimal digits)
+
+A separate errorrate function calculates the errorrate based on following logic
+a) If iterations == 0, errorrate is (10 power -5)
+b) If iterations < 0, errorate is (10 power iterations)
+
+
+
+Sample Use case and output
+
+1) java pgrk_4952 15 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 1 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 2 :P[ 0]=0.2500000 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 3 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 4 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 5 :P[ 0]=0.1732344 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 6 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 7 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 8 :P[ 0]=0.1496625 P[ 1]=0.1234406 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 9 :P[ 0]=0.1424245 P[ 1]=0.1234406 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 10 :P[ 0]=0.1424245 P[ 1]=0.1234406 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 11 :P[ 0]=0.1424245 P[ 1]=0.1208259 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 12 :P[ 0]=0.1402020 P[ 1]=0.1208259 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 13 :P[ 0]=0.1402020 P[ 1]=0.1208259 P[ 2]=0.0970858 P[ 3]=0.0970858
+Iter : 14 :P[ 0]=0.1402020 P[ 1]=0.1200230 P[ 2]=0.0970858 P[ 3]=0.0970858
+Iter : 15 :P[ 0]=0.1395195 P[ 1]=0.1200230 P[ 2]=0.0970858 P[ 3]=0.0970858
+
+2) java pgrk_4952 -3 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 1 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 2 :P[ 0]=0.2500000 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 3 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 4 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 5 :P[ 0]=0.1732344 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 6 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 7 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 8 :P[ 0]=0.1496625 P[ 1]=0.1234406 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 9 :P[ 0]=0.1424245 P[ 1]=0.1234406 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 10 :P[ 0]=0.1424245 P[ 1]=0.1234406 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 11 :P[ 0]=0.1424245 P[ 1]=0.1208259 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 12 :P[ 0]=0.1402020 P[ 1]=0.1208259 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 13 :P[ 0]=0.1402020 P[ 1]=0.1208259 P[ 2]=0.0970858 P[ 3]=0.0970858
+
+3) java pgrk_4952 7 1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=1.0000000 P[ 1]=1.0000000 P[ 2]=1.0000000 P[ 3]=1.0000000
+Iter : 1 :P[ 0]=0.8875000 P[ 1]=0.8875000 P[ 2]=0.4625000 P[ 3]=0.4625000
+Iter : 2 :P[ 0]=0.7918750 P[ 1]=0.4306250 P[ 2]=0.4146875 P[ 3]=0.4146875
+Iter : 3 :P[ 0]=0.4035313 P[ 1]=0.3899844 P[ 2]=0.3740469 P[ 3]=0.3740469
+Iter : 4 :P[ 0]=0.3689867 P[ 1]=0.3554398 P[ 2]=0.2090008 P[ 3]=0.2090008
+Iter : 5 :P[ 0]=0.3396239 P[ 1]=0.2151507 P[ 2]=0.1943194 P[ 3]=0.1943194
+Iter : 6 :P[ 0]=0.2203781 P[ 1]=0.2026715 P[ 2]=0.1818401 P[ 3]=0.1818401
+Iter : 7 :P[ 0]=0.2097707 P[ 1]=0.1920641 P[ 2]=0.1311607 P[ 3]=0.1311607
+
+4) java pgrk_4952 7 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 1 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 2 :P[ 0]=0.2500000 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 3 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 4 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 5 :P[ 0]=0.1732344 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 6 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 7 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1011066 P[ 3]=0.1011066
+
+5) java pgrk_4952 7 -2 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.5000000 P[ 1]=0.5000000 P[ 2]=0.5000000 P[ 3]=0.5000000
+Iter : 1 :P[ 0]=0.4625000 P[ 1]=0.4625000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 2 :P[ 0]=0.4306250 P[ 1]=0.2500000 P[ 2]=0.2340625 P[ 3]=0.2340625
+Iter : 3 :P[ 0]=0.2500000 P[ 1]=0.2364531 P[ 2]=0.2205156 P[ 3]=0.2205156
+Iter : 4 :P[ 0]=0.2384852 P[ 1]=0.2249383 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 5 :P[ 0]=0.2286975 P[ 1]=0.1596875 P[ 2]=0.1388562 P[ 3]=0.1388562
+Iter : 6 :P[ 0]=0.1732344 P[ 1]=0.1555278 P[ 2]=0.1346965 P[ 3]=0.1346965
+Iter : 7 :P[ 0]=0.1696986 P[ 1]=0.1519920 P[ 2]=0.1111246 P[ 3]=0.1111246
+
+6) java pgrk_4952 0 1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=1.0000000 P[ 1]=1.0000000 P[ 2]=1.0000000 P[ 3]=1.0000000
+Iter : 1 :P[ 0]=0.8875000 P[ 1]=0.8875000 P[ 2]=0.4625000 P[ 3]=0.4625000
+Iter : 2 :P[ 0]=0.7918750 P[ 1]=0.4306250 P[ 2]=0.4146875 P[ 3]=0.4146875
+Iter : 3 :P[ 0]=0.4035313 P[ 1]=0.3899844 P[ 2]=0.3740469 P[ 3]=0.3740469
+Iter : 4 :P[ 0]=0.3689867 P[ 1]=0.3554398 P[ 2]=0.2090008 P[ 3]=0.2090008
+Iter : 5 :P[ 0]=0.3396239 P[ 1]=0.2151507 P[ 2]=0.1943194 P[ 3]=0.1943194
+Iter : 6 :P[ 0]=0.2203781 P[ 1]=0.2026715 P[ 2]=0.1818401 P[ 3]=0.1818401
+Iter : 7 :P[ 0]=0.2097707 P[ 1]=0.1920641 P[ 2]=0.1311607 P[ 3]=0.1311607
+Iter : 8 :P[ 0]=0.2007545 P[ 1]=0.1489866 P[ 2]=0.1266526 P[ 3]=0.1266526
+Iter : 9 :P[ 0]=0.1641386 P[ 1]=0.1451547 P[ 2]=0.1228207 P[ 3]=0.1228207
+Iter : 10 :P[ 0]=0.1608815 P[ 1]=0.1418976 P[ 2]=0.1072589 P[ 3]=0.1072589
+Iter : 11 :P[ 0]=0.1581129 P[ 1]=0.1286701 P[ 2]=0.1058746 P[ 3]=0.1058746
+Iter : 12 :P[ 0]=0.1468696 P[ 1]=0.1274934 P[ 2]=0.1046980 P[ 3]=0.1046980
+Iter : 13 :P[ 0]=0.1458694 P[ 1]=0.1264933 P[ 2]=0.0999196 P[ 3]=0.0999196
+Iter : 14 :P[ 0]=0.1450193 P[ 1]=0.1224316 P[ 2]=0.0994945 P[ 3]=0.0994945
+Iter : 15 :P[ 0]=0.1415669 P[ 1]=0.1220703 P[ 2]=0.0991332 P[ 3]=0.0991332
+Iter : 16 :P[ 0]=0.1412598 P[ 1]=0.1217632 P[ 2]=0.0976659 P[ 3]=0.0976659
+Iter : 17 :P[ 0]=0.1409987 P[ 1]=0.1205160 P[ 2]=0.0975354 P[ 3]=0.0975354
+Iter : 18 :P[ 0]=0.1399386 P[ 1]=0.1204051 P[ 2]=0.0974245 P[ 3]=0.0974245
+Iter : 19 :P[ 0]=0.1398443 P[ 1]=0.1203108 P[ 2]=0.0969739 P[ 3]=0.0969739
+Iter : 20 :P[ 0]=0.1397642 P[ 1]=0.1199278 P[ 2]=0.0969338 P[ 3]=0.0969338
+Iter : 21 :P[ 0]=0.1394387 P[ 1]=0.1198938 P[ 2]=0.0968998 P[ 3]=0.0968998
+Iter : 22 :P[ 0]=0.1394097 P[ 1]=0.1198648 P[ 2]=0.0967614 P[ 3]=0.0967614
+Iter : 23 :P[ 0]=0.1393851 P[ 1]=0.1197472 P[ 2]=0.0967491 P[ 3]=0.0967491
+Iter : 24 :P[ 0]=0.1392851 P[ 1]=0.1197368 P[ 2]=0.0967387 P[ 3]=0.0967387
+Iter : 25 :P[ 0]=0.1392762 P[ 1]=0.1197279 P[ 2]=0.0966962 P[ 3]=0.0966962
+Iter : 26 :P[ 0]=0.1392687 P[ 1]=0.1196918 P[ 2]=0.0966924 P[ 3]=0.0966924
+Iter : 27 :P[ 0]=0.1392380 P[ 1]=0.1196885 P[ 2]=0.0966892 P[ 3]=0.0966892
+Iter : 28 :P[ 0]=0.1392353 P[ 1]=0.1196858 P[ 2]=0.0966761 P[ 3]=0.0966761
+Iter : 29 :P[ 0]=0.1392329 P[ 1]=0.1196747 P[ 2]=0.0966750 P[ 3]=0.0966750
+Iter : 30 :P[ 0]=0.1392235 P[ 1]=0.1196737 P[ 2]=0.0966740 P[ 3]=0.0966740
+
+7) java pgrk_4952 0 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 1 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 2 :P[ 0]=0.2500000 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 3 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 4 :P[ 0]=0.1732344 P[ 1]=0.1596875 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 5 :P[ 0]=0.1732344 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 6 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 7 :P[ 0]=0.1496625 P[ 1]=0.1319559 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 8 :P[ 0]=0.1496625 P[ 1]=0.1234406 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 9 :P[ 0]=0.1424245 P[ 1]=0.1234406 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 10 :P[ 0]=0.1424245 P[ 1]=0.1234406 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 11 :P[ 0]=0.1424245 P[ 1]=0.1208259 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 12 :P[ 0]=0.1402020 P[ 1]=0.1208259 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 13 :P[ 0]=0.1402020 P[ 1]=0.1208259 P[ 2]=0.0970858 P[ 3]=0.0970858
+Iter : 14 :P[ 0]=0.1402020 P[ 1]=0.1200230 P[ 2]=0.0970858 P[ 3]=0.0970858
+Iter : 15 :P[ 0]=0.1395195 P[ 1]=0.1200230 P[ 2]=0.0970858 P[ 3]=0.0970858
+Iter : 16 :P[ 0]=0.1395195 P[ 1]=0.1200230 P[ 2]=0.0967958 P[ 3]=0.0967958
+Iter : 17 :P[ 0]=0.1395195 P[ 1]=0.1197764 P[ 2]=0.0967958 P[ 3]=0.0967958
+Iter : 18 :P[ 0]=0.1393100 P[ 1]=0.1197764 P[ 2]=0.0967958 P[ 3]=0.0967958
+Iter : 19 :P[ 0]=0.1393100 P[ 1]=0.1197764 P[ 2]=0.0967067 P[ 3]=0.0967067
+Iter : 20 :P[ 0]=0.1393100 P[ 1]=0.1197007 P[ 2]=0.0967067 P[ 3]=0.0967067
+Iter : 21 :P[ 0]=0.1392456 P[ 1]=0.1197007 P[ 2]=0.0967067 P[ 3]=0.0967067
+Iter : 22 :P[ 0]=0.1392456 P[ 1]=0.1197007 P[ 2]=0.0966794 P[ 3]=0.0966794
+Iter : 23 :P[ 0]=0.1392456 P[ 1]=0.1196775 P[ 2]=0.0966794 P[ 3]=0.0966794
+Iter : 24 :P[ 0]=0.1392259 P[ 1]=0.1196775 P[ 2]=0.0966794 P[ 3]=0.0966794
+Iter : 25 :P[ 0]=0.1392259 P[ 1]=0.1196775 P[ 2]=0.0966710 P[ 3]=0.0966710
+
+8) java pgrk_4952 0 -2 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.5000000 P[ 1]=0.5000000 P[ 2]=0.5000000 P[ 3]=0.5000000
+Iter : 1 :P[ 0]=0.4625000 P[ 1]=0.4625000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 2 :P[ 0]=0.4306250 P[ 1]=0.2500000 P[ 2]=0.2340625 P[ 3]=0.2340625
+Iter : 3 :P[ 0]=0.2500000 P[ 1]=0.2364531 P[ 2]=0.2205156 P[ 3]=0.2205156
+Iter : 4 :P[ 0]=0.2384852 P[ 1]=0.2249383 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 5 :P[ 0]=0.2286975 P[ 1]=0.1596875 P[ 2]=0.1388562 P[ 3]=0.1388562
+Iter : 6 :P[ 0]=0.1732344 P[ 1]=0.1555278 P[ 2]=0.1346965 P[ 3]=0.1346965
+Iter : 7 :P[ 0]=0.1696986 P[ 1]=0.1519920 P[ 2]=0.1111246 P[ 3]=0.1111246
+Iter : 8 :P[ 0]=0.1666932 P[ 1]=0.1319559 P[ 2]=0.1096219 P[ 3]=0.1096219
+Iter : 9 :P[ 0]=0.1496625 P[ 1]=0.1306786 P[ 2]=0.1083446 P[ 3]=0.1083446
+Iter : 10 :P[ 0]=0.1485768 P[ 1]=0.1295929 P[ 2]=0.1011066 P[ 3]=0.1011066
+Iter : 11 :P[ 0]=0.1476540 P[ 1]=0.1234406 P[ 2]=0.1006452 P[ 3]=0.1006452
+Iter : 12 :P[ 0]=0.1424245 P[ 1]=0.1230484 P[ 2]=0.1002529 P[ 3]=0.1002529
+Iter : 13 :P[ 0]=0.1420911 P[ 1]=0.1227150 P[ 2]=0.0980304 P[ 3]=0.0980304
+Iter : 14 :P[ 0]=0.1418077 P[ 1]=0.1208259 P[ 2]=0.0978887 P[ 3]=0.0978887
+Iter : 15 :P[ 0]=0.1402020 P[ 1]=0.1207054 P[ 2]=0.0977683 P[ 3]=0.0977683
+Iter : 16 :P[ 0]=0.1400996 P[ 1]=0.1206030 P[ 2]=0.0970858 P[ 3]=0.0970858
+Iter : 17 :P[ 0]=0.1400126 P[ 1]=0.1200230 P[ 2]=0.0970423 P[ 3]=0.0970423
+Iter : 18 :P[ 0]=0.1395195 P[ 1]=0.1199860 P[ 2]=0.0970054 P[ 3]=0.0970054
+Iter : 19 :P[ 0]=0.1394881 P[ 1]=0.1199545 P[ 2]=0.0967958 P[ 3]=0.0967958
+Iter : 20 :P[ 0]=0.1394614 P[ 1]=0.1197764 P[ 2]=0.0967824 P[ 3]=0.0967824
+Iter : 21 :P[ 0]=0.1393100 P[ 1]=0.1197651 P[ 2]=0.0967711 P[ 3]=0.0967711
+Iter : 22 :P[ 0]=0.1393003 P[ 1]=0.1197554 P[ 2]=0.0967067 P[ 3]=0.0967067
+Iter : 23 :P[ 0]=0.1392921 P[ 1]=0.1197007 P[ 2]=0.0967026 P[ 3]=0.0967026
+Iter : 24 :P[ 0]=0.1392456 P[ 1]=0.1196972 P[ 2]=0.0966991 P[ 3]=0.0966991
+Iter : 25 :P[ 0]=0.1392427 P[ 1]=0.1196943 P[ 2]=0.0966794 P[ 3]=0.0966794
+Iter : 26 :P[ 0]=0.1392401 P[ 1]=0.1196775 P[ 2]=0.0966781 P[ 3]=0.0966781
+Iter : 27 :P[ 0]=0.1392259 P[ 1]=0.1196764 P[ 2]=0.0966771 P[ 3]=0.0966771
+Iter : 28 :P[ 0]=0.1392249 P[ 1]=0.1196755 P[ 2]=0.0966710 P[ 3]=0.0966710
+
+9) java pgrk_4952 -1 1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=1.0000000 P[ 1]=1.0000000 P[ 2]=1.0000000 P[ 3]=1.0000000
+Iter : 1 :P[ 0]=0.8875000 P[ 1]=0.8875000 P[ 2]=0.4625000 P[ 3]=0.4625000
+Iter : 2 :P[ 0]=0.7918750 P[ 1]=0.4306250 P[ 2]=0.4146875 P[ 3]=0.4146875
+Iter : 3 :P[ 0]=0.4035313 P[ 1]=0.3899844 P[ 2]=0.3740469 P[ 3]=0.3740469
+Iter : 4 :P[ 0]=0.3689867 P[ 1]=0.3554398 P[ 2]=0.2090008 P[ 3]=0.2090008
+Iter : 5 :P[ 0]=0.3396239 P[ 1]=0.2151507 P[ 2]=0.1943194 P[ 3]=0.1943194
+Iter : 6 :P[ 0]=0.2203781 P[ 1]=0.2026715 P[ 2]=0.1818401 P[ 3]=0.1818401
+Iter : 7 :P[ 0]=0.2097707 P[ 1]=0.1920641 P[ 2]=0.1311607 P[ 3]=0.1311607
+
+10) java pgrk_4952 -1 -1 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 1 :P[ 0]=0.2500000 P[ 1]=0.2500000 P[ 2]=0.1437500 P[ 3]=0.1437500
+Iter : 2 :P[ 0]=0.2500000 P[ 1]=0.1596875 P[ 2]=0.1437500 P[ 3]=0.1437500
+
+11) java pgrk_4952 -1 -2 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.5000000 P[ 1]=0.5000000 P[ 2]=0.5000000 P[ 3]=0.5000000
+Iter : 1 :P[ 0]=0.4625000 P[ 1]=0.4625000 P[ 2]=0.2500000 P[ 3]=0.2500000
+Iter : 2 :P[ 0]=0.4306250 P[ 1]=0.2500000 P[ 2]=0.2340625 P[ 3]=0.2340625
+Iter : 3 :P[ 0]=0.2500000 P[ 1]=0.2364531 P[ 2]=0.2205156 P[ 3]=0.2205156
+Iter : 4 :P[ 0]=0.2384852 P[ 1]=0.2249383 P[ 2]=0.1437500 P[ 3]=0.1437500
+
+12) java pgrk_4952 0 0 samplegraph.txt
+*** Program Output ***
+Base : 0 :P[ 0]=0.0000000 P[ 1]=0.0000000 P[ 2]=0.0000000 P[ 3]=0.0000000
+Iter : 1 :P[ 0]=0.0375000 P[ 1]=0.0375000 P[ 2]=0.0375000 P[ 3]=0.0375000
+Iter : 2 :P[ 0]=0.0693750 P[ 1]=0.0693750 P[ 2]=0.0534375 P[ 3]=0.0534375
+Iter : 3 :P[ 0]=0.0964688 P[ 1]=0.0829219 P[ 2]=0.0669844 P[ 3]=0.0669844
+Iter : 4 :P[ 0]=0.1079836 P[ 1]=0.0944367 P[ 2]=0.0784992 P[ 3]=0.0784992
+Iter : 5 :P[ 0]=0.1177712 P[ 1]=0.1042243 P[ 2]=0.0833930 P[ 3]=0.0833930
+Iter : 6 :P[ 0]=0.1260907 P[ 1]=0.1083841 P[ 2]=0.0875528 P[ 3]=0.0875528
+Iter : 7 :P[ 0]=0.1296265 P[ 1]=0.1119198 P[ 2]=0.0910885 P[ 3]=0.0910885
+Iter : 8 :P[ 0]=0.1326319 P[ 1]=0.1149253 P[ 2]=0.0925912 P[ 3]=0.0925912
+Iter : 9 :P[ 0]=0.1351865 P[ 1]=0.1162026 P[ 2]=0.0938685 P[ 3]=0.0938685
+Iter : 10 :P[ 0]=0.1362722 P[ 1]=0.1172883 P[ 2]=0.0949543 P[ 3]=0.0949543
+Iter : 11 :P[ 0]=0.1371950 P[ 1]=0.1182111 P[ 2]=0.0954157 P[ 3]=0.0954157
+Iter : 12 :P[ 0]=0.1379794 P[ 1]=0.1186033 P[ 2]=0.0958079 P[ 3]=0.0958079
+Iter : 13 :P[ 0]=0.1383128 P[ 1]=0.1189367 P[ 2]=0.0961413 P[ 3]=0.0961413
+Iter : 14 :P[ 0]=0.1385962 P[ 1]=0.1192201 P[ 2]=0.0962830 P[ 3]=0.0962830
+Iter : 15 :P[ 0]=0.1388371 P[ 1]=0.1193405 P[ 2]=0.0964034 P[ 3]=0.0964034
+Iter : 16 :P[ 0]=0.1389394 P[ 1]=0.1194429 P[ 2]=0.0965058 P[ 3]=0.0965058
+Iter : 17 :P[ 0]=0.1390264 P[ 1]=0.1195299 P[ 2]=0.0965493 P[ 3]=0.0965493
+Iter : 18 :P[ 0]=0.1391004 P[ 1]=0.1195669 P[ 2]=0.0965862 P[ 3]=0.0965862
+Iter : 19 :P[ 0]=0.1391318 P[ 1]=0.1195983 P[ 2]=0.0966177 P[ 3]=0.0966177
+Iter : 20 :P[ 0]=0.1391586 P[ 1]=0.1196250 P[ 2]=0.0966310 P[ 3]=0.0966310
+Iter : 21 :P[ 0]=0.1391813 P[ 1]=0.1196364 P[ 2]=0.0966424 P[ 3]=0.0966424
+Iter : 22 :P[ 0]=0.1391909 P[ 1]=0.1196460 P[ 2]=0.0966520 P[ 3]=0.0966520
+
