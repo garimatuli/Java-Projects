@@ -53,6 +53,29 @@ public class Operators {
         String s4 = new String("HELLO");
         System.out.println(s3 == s4); //false // as both s3 & s4 refers to different objects & have different addresses in memory
         System.out.println(s3.equals(s4)); // true
+
+
+        //Bitwise Operators
+        int p = 11, q = 12; //Binary rep - 11-> 1011 , 12-> 1100
+        System.out.println(p+ " " +q); // 11 12
+        // bitwise AND &
+        System.out.println(p&q); // 8 (1011 & 1100 -> 1000)
+        // bitwise Exclusive OR ^
+        System.out.println(p^q); // 7 (1011 ^ 1100 -> 0111)
+        // bitwise Inclusive OR |
+        System.out.println(p|q); // 15 (1011 | 1100 -> 1111)
+        // Bitwise Compliment
+        System.out.println(~p); //-12 (~1011 -> 0100 -> 4 -> 2's complement of 4 is -12 which will be the result)
+
+        //Bit Shift Operators
+        // signed shift right
+        System.out.println(p>>2); // 2 (1011 >> 2 -> 0010)
+        System.out.println(-p>>2); // -3 (preserve the sign bit)
+        // Unsigned shift right
+        System.out.println(p>>>2); // 2 (1011 >>> 2 -> 0010)
+        System.out.println(-p>>>2); // 1073741821 (DOES NOT preserve the sign bit)
+        // signed shift left
+        System.out.println(p<<2); // 44 (1011 << 2 -> 101100)
     }
 }
 
