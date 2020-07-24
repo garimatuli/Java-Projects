@@ -1,3 +1,5 @@
+// Day 1
+// static variables, Object creation
 public class Person {
     // A static variable is common to all the instances (or objects) of the class because it is a class level variable.
     // In other words you can say that only a single copy of static variable is created and shared among all the instances of the class.
